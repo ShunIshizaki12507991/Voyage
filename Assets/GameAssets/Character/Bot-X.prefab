@@ -9,6 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 533316365300510132}
+  - component: {fileID: 5314526634580265834}
+  - component: {fileID: 4660810663110732250}
   m_Layer: 0
   m_Name: Bot-X
   m_TagString: Untagged
@@ -32,6 +34,50 @@ Transform:
   - {fileID: 3615630716451792617}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5314526634580265834
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 505249601927028706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35f6b59068d44fd0879ce2480fef9cc2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ColliderTransform: {fileID: 3615630716451792617}
+  m_GroundMask:
+    serializedVersion: 2
+    m_Bits: 64
+  m_JumpForce: 3
+--- !u!54 &4660810663110732250
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 505249601927028706}
+  serializedVersion: 4
+  m_Mass: 50
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 112
+  m_CollisionDetection: 0
 --- !u!1001 &3866328767767298306
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -62,39 +108,37 @@ PrefabInstance:
       objectReference: {fileID: 9100000, guid: 694d347e28dad4c4c82ca71390785451, type: 2}
     - target: {fileID: 5866666021909216657, guid: 7c43aa8351448a04cabe9086a1e2949e, type: 3}
       propertyPath: m_WarningMessage
-      value: "\nBinding warning: Some generic clip(s) animate transforms that are
-        already bound by a Humanoid avatar. These transforms can only be changed
-        by Humanoid clips.\n\tTransform 'mixamorig:Hips'\n\tTransform 'mixamorig:LeftFoot'\n\tTransform
-        'mixamorig:Spine1'\n\tTransform 'mixamorig:RightArm'\n\tTransform 'mixamorig:LeftLeg'\n\tTransform
-        'mixamorig:RightFoot'\n\tTransform 'mixamorig:Head'\n\tTransform 'mixamorig:LeftUpLeg'\n\tTransform
-        'mixamorig:LeftArm'\n\tTransform 'mixamorig:RightHand'\n\tand more ...\n\tFrom
-        animation clip 'Idle'"
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5866666021909216657, guid: 7c43aa8351448a04cabe9086a1e2949e, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1082271958561512970, guid: 7c43aa8351448a04cabe9086a1e2949e, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7c43aa8351448a04cabe9086a1e2949e, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 5242096657859259614}
+      addedObject: {fileID: 8913026033390805168}
   m_SourcePrefab: {fileID: 100100000, guid: 7c43aa8351448a04cabe9086a1e2949e, type: 3}
 --- !u!4 &3615630716451792617 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 7c43aa8351448a04cabe9086a1e2949e, type: 3}
   m_PrefabInstance: {fileID: 3866328767767298306}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &4225208897474404104 stripped
+--- !u!1 &4136165202975128659 stripped
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 1082271958561512970, guid: 7c43aa8351448a04cabe9086a1e2949e, type: 3}
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 7c43aa8351448a04cabe9086a1e2949e, type: 3}
   m_PrefabInstance: {fileID: 3866328767767298306}
   m_PrefabAsset: {fileID: 0}
---- !u!136 &5242096657859259614
+--- !u!136 &8913026033390805168
 CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4225208897474404104}
+  m_GameObject: {fileID: 4136165202975128659}
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -107,7 +151,7 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.25
-  m_Height: 1.8
+  m_Radius: 0.21
+  m_Height: 1.82
   m_Direction: 1
-  m_Center: {x: 0, y: -0.15, z: 0}
+  m_Center: {x: 0, y: 0.91, z: 0}
