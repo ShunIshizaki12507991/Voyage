@@ -6,7 +6,6 @@
     internal sealed class PlayerComponent : MonoBehaviour
     {
         private Camera m_MainCamera;
-        private Transform m_PlayerTransform;
         private Animator m_PlayerAnimator;
         private CapsuleCollider m_PlayerCollider;
         private Rigidbody m_PlayerRigidbody;
@@ -27,7 +26,6 @@
         private void Awake()
         {
             m_MainCamera = Camera.main;
-            m_PlayerTransform = GetComponent<Transform>();
             m_PlayerAnimator = GetComponentInChildren<Animator>();
             m_PlayerCollider = GetComponentInChildren<CapsuleCollider>();
             m_PlayerRigidbody = GetComponent<Rigidbody>();
@@ -42,11 +40,6 @@
             {
                 input += Vector3.forward;
                 m_MotionState = MotionState.WALK;
-            }
-            if (m_Player.GetButton("Shift") && m_Player.GetButton("Forward"))
-            {
-                input += Vector3.forward;
-                m_MotionState = MotionState.RUN;
             }
             if (m_Player.GetButton("Left"))
             {
@@ -66,6 +59,11 @@
             if (m_Player.GetButtonDown("Jump"))
                 if (isGrounded)
                     m_MotionState = MotionState.JUMP;
+            if (m_Player.GetButton("Shift"))
+            {
+                input = input * 2;
+                m_MotionState = MotionState.RUN;
+            }
 
             switch (m_MotionState)
             {
@@ -87,10 +85,6 @@
         {
             if (input.magnitude <= 0f)
             {
-                // m_MotionState = MotionState.IDLE;
-                // m_PlayerAnimator.SetBool("IsWalking", false);
-                // m_PlayerAnimator.SetBool("IsRunning", false);
-                // m_PlayerRigidbody.velocity = Vector3.zero;
                 if (m_PlayerRigidbody.velocity.magnitude == 0)
                 {
                     m_MotionState = MotionState.IDLE;
@@ -104,56 +98,52 @@
                 return;
             }
 
-            Vector3 movementRight = Vector3.right;
-            Vector3 movementForward = Vector3.forward;
+            var movementRight = Vector3.right;
+            var movementForward = Vector3.forward;
+            var groundNormal = Vector3.up;
 
             if (m_MainCamera != null)
             {
                 // カメラに対して前と右の方向を取得
-                Vector3 cameraRight = m_MainCamera.transform.right;
-                Vector3 cameraForward = m_MainCamera.transform.forward;
+                var cameraRight = m_MainCamera.transform.right;
+                var cameraForward = m_MainCamera.transform.forward;
+                
+                movementRight = ProjectOnPlane(cameraRight, groundNormal).normalized;
+                movementForward = ProjectOnPlane(cameraForward, groundNormal).normalized;
+            }
+
+            var movement = movementRight * input.x + movementForward * input.z;
+
+            Vector3 rotateTarget = new Vector3(movement.x, 0, movement.z);
+            if (rotateTarget.magnitude > 0.1f)
+            {
+                Quaternion lookRotation = Quaternion.LookRotation(rotateTarget);
+                transform.rotation = Quaternion.Lerp(lookRotation, transform.rotation, 0.8f);
             }
 
             switch (m_MotionState)
             {
                 case MotionState.WALK:
-                    if (m_PlayerRigidbody.velocity.magnitude < m_WalkSpeed)
                     {
                         var currentSpeed = m_WalkSpeed - m_PlayerRigidbody.velocity.magnitude;
                         m_PlayerAnimator.SetBool("IsWalking", true);
-                        m_PlayerRigidbody.AddForce(new Vector3(input.x, 0, input.z) * currentSpeed, ForceMode.Acceleration);
+                        m_PlayerAnimator.SetBool("IsRunning", false);
+                        m_PlayerRigidbody.AddForce(movement * currentSpeed, ForceMode.Acceleration);
                     } 
                     break;
                 case MotionState.RUN:
-                    if (m_PlayerRigidbody.velocity.magnitude < m_RunSpeed)
                     {
                         var currentSpeed = m_RunSpeed - m_PlayerRigidbody.velocity.magnitude;
                         m_PlayerAnimator.SetBool("IsRunning", true);
-                        m_PlayerRigidbody.AddForce(new Vector3(input.x, 0, input.z) * currentSpeed, ForceMode.Acceleration);
+                        m_PlayerRigidbody.AddForce(movement * currentSpeed, ForceMode.Acceleration);
                     }
                     break;
             }
-            // if (m_MotionState is MotionState.WALK)
-            // {
-            //     if (m_PlayerRigidbody.velocity.magnitude < m_WalkSpeed)
-            //     {
-            //         var currentSpeed = m_WalkSpeed - m_PlayerRigidbody.velocity.magnitude;
-            //         m_PlayerAnimator.SetBool("IsWalking", true);
-            //         m_PlayerRigidbody.AddForce(new Vector3(input.x, 0, input.z) * currentSpeed, ForceMode.Acceleration);
-            //         return;
-            //     }
-            // }
-            //
-            // if (m_MotionState is MotionState.RUN)
-            // {
-            //     if (m_PlayerRigidbody.velocity.magnitude < m_RunSpeed)
-            //     {
-            //         var currentSpeed = m_RunSpeed - m_PlayerRigidbody.velocity.magnitude;
-            //         m_PlayerAnimator.SetBool("IsRunning", true);
-            //         m_PlayerRigidbody.AddForce(new Vector3(input.x, 0, input.z) * currentSpeed, ForceMode.Acceleration);
-            //         return;
-            //     }
-            // }
+        }
+
+        private Vector3 ProjectOnPlane(Vector3 vector, Vector3 normal)
+        {
+            return Vector3.Cross(normal, Vector3.Cross(vector, normal));
         }
 
         private void UpdateJumpMotion(bool isGrounded)
